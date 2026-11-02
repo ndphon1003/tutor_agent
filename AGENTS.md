@@ -32,6 +32,20 @@ Before acting, read the relevant files under `rules/`.
 
 Use a skill under `.agents/skills/` when the requested workflow matches its description.
 
+## Write-action approval gate
+
+Read-only inspection, analysis, planning, and drafting may proceed without approval.
+
+Before any write action, the agent MUST:
+1. Explain what it intends to change.
+2. Show or summarize the proposed change at an appropriate level of detail.
+3. Ask the user for explicit approval.
+4. Perform the write only after that approval.
+
+Write actions include creating, updating, deleting, transitioning, committing, pushing, merging, commenting on, or otherwise mutating Jira, GitHub repositories, the KB, application code, database state, configuration, or other project/external state.
+
+Approval is scoped to the specific proposed action or clearly stated batch. If scope materially changes, request approval again.
+
 ## Safety against invented requirements
 
 Never invent project requirements, database schema, API contracts, business rules, or implementation status.

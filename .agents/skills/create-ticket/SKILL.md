@@ -1,13 +1,13 @@
 ---
 name: create-ticket
-description: Create a Jira work item for Tutor Marketplace from an approved user request and confirmed project knowledge.
+description: Draft and, after explicit user approval, create a Jira work item for Tutor Marketplace from confirmed project knowledge.
 ---
 
 # Create Ticket
 
 ## Goal
 
-Turn an approved requirement or technical work item into a clear Jira issue without inventing requirements.
+Turn a requirement or technical work item into a clear Jira issue without inventing requirements, while requiring explicit user approval before Jira is modified.
 
 ## Workflow
 
@@ -20,8 +20,14 @@ Turn an approved requirement or technical work item into a clear Jira issue with
    - Task for technical/internal work.
 6. Draft a concise title and description.
 7. Add acceptance criteria only when supported by the request or confirmed knowledge.
-8. Present unresolved decisions explicitly.
-9. Create the Jira issue only when issue creation is requested/approved.
+8. Present the complete proposed ticket and unresolved decisions to the user.
+9. Ask explicitly whether the user approves creating the ticket.
+10. Only after explicit approval, create the Jira issue.
+11. If the proposed ticket changes materially after approval, present the revised ticket and ask for approval again before writing.
+
+## Approval rule
+
+Drafting and inspecting are read-only and do not require approval. Creating, editing, transitioning, commenting on, or deleting a Jira issue is a write action and requires explicit user approval immediately before the write. Do not treat a request to draft or plan a ticket as approval to create it.
 
 ## Output quality
 

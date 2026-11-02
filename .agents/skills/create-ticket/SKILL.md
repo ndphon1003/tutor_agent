@@ -1,6 +1,6 @@
 ---
 name: create-ticket
-description: Draft and, after explicit user approval, create a clear Jira work item for Tutor Marketplace using a consistent human-readable format and confirmed project knowledge.
+description: Create or draft a standardized Jira Story or Task for Tutor Marketplace from a user requirement. Use this skill whenever the user asks to create, draft, prepare, propose, write, or refine a Jira ticket or work item. It may be invoked explicitly with $create-ticket or selected automatically for Jira ticket creation requests.
 ---
 
 # Create Ticket
@@ -12,6 +12,22 @@ Turn a user request into a clear Jira work item that describes the problem or de
 The ticket must be understandable by a human reader who has project context but has not participated in the conversation that created the ticket.
 
 The user's request provides the ticket-specific requirement. This skill provides the standard structure, wording rules, context gathering, validation, and approval workflow.
+
+## Invocation
+
+Use this skill when the user explicitly invokes `$create-ticket` or when the request clearly asks to create, draft, prepare, propose, write, or refine a Jira ticket/work item for Tutor Marketplace.
+
+Examples:
+
+`$create-ticket Database Design & Initial Setup`
+
+`$create-ticket Add tutor authentication`
+
+The text after `$create-ticket` is the ticket-specific request. Any following text is additional requirement/context and must be interpreted under the same rules in this skill.
+
+The user does not need to restate the ticket template or workflow. This skill owns the standard ticket structure and creation workflow.
+
+Explicit invocation of `$create-ticket` selects this workflow, but it is not approval to perform the Jira write. The approval gate below still applies.
 
 ## Core writing principle
 
@@ -199,7 +215,7 @@ Reading, researching, checking for duplicates, and drafting are read-only action
 
 Creating, editing, transitioning, commenting on, or deleting a Jira issue is a write action and requires explicit user approval before the action occurs.
 
-A request such as `draft a ticket`, `prepare a ticket`, or `use create-ticket` is not by itself approval to create the Jira issue.
+A request such as `draft a ticket`, `prepare a ticket`, `use create-ticket`, or an explicit `$create-ticket` invocation is not by itself approval to create the Jira issue.
 
 When the draft is ready, ask a direct question such as:
 

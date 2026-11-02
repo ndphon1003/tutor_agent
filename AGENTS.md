@@ -17,6 +17,18 @@ This repository coordinates agent-assisted development for Tutor Marketplace.
 - Agent = WHO performs or owns a type of work.
 - Rule = MUST / MUST NOT constraints.
 - Skill = HOW a repeatable workflow is performed.
+- MCP = TOOL used to access project systems and documentation.
+
+## MCP tool routing
+
+Use the configured MCP connections according to their responsibility:
+
+- GitHub MCP → read and, after approval, modify `ndphon1003/tutor_agent`, `ndphon1003/tutor_kb`, `ndphon1003/tutor_backend`, and `ndphon1003/tutor_frontend`.
+- Atlassian MCP → read Jira project/ticket/workflow state and, after approval, create or modify Jira work items.
+- Supabase MCP → inspect the Tutor Marketplace PostgreSQL/Supabase project and, after approval, perform database actions that are consistent with approved source-controlled migrations.
+- OpenAI Developer Docs MCP → consult current official OpenAI/Codex documentation when OpenAI tooling, Codex, agents, or MCP behavior needs verification.
+
+Prefer the authoritative source for each question. Do not use one system as a substitute for another source of truth.
 
 ## Routing
 
@@ -45,6 +57,8 @@ Before any write action, the agent MUST:
 Write actions include creating, updating, deleting, transitioning, committing, pushing, merging, commenting on, or otherwise mutating Jira, GitHub repositories, the KB, application code, database state, configuration, or other project/external state.
 
 Approval is scoped to the specific proposed action or clearly stated batch. If scope materially changes, request approval again.
+
+MCP write capability never overrides this approval gate.
 
 ## Safety against invented requirements
 

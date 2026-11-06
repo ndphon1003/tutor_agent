@@ -42,26 +42,26 @@ Planning may include technical details when they are supported by the current pr
 
 Do not invent business rules, API contracts, database schema, or product decisions merely to make the plan complete.
 
-## Specificity standard — implementation-ready solution
+## Solution-design standard — concrete design, not code
 
-A plan must be a **proposed technical solution**, not a list of activities to investigate, decide, design, implement, and verify. Before writing it, inspect the relevant real repository files, Jira acceptance criteria, and KB, and convert confirmed requirements into a concrete, testable design.
+The output is a **technical solution / solution design** for a developer to review before implementation, NOT source code, an implementation patch, or a coding tutorial.
 
-The developer reading the plan must be able to answer **what objects or components to create/change, where, how they connect, which constraints and algorithms apply, and exactly how to validate them** without redoing architectural research.
+Make the design concrete enough to evaluate and implement without prematurely coding it:
+- **Database tickets:** name proposed entities/tables; describe essential fields and conceptual types, PK/FK relationships, cardinalities, uniqueness and integrity rules, lifecycle states, important indexes, data ownership, and migration boundaries at a conceptual level. Include a Mermaid ERD when meaningful.
+- **Backend tickets:** specify proposed responsibilities of modules/components, API operations and conceptual request/response data, authorization, state transitions, failure handling, consistency/transaction rules, and integration boundaries.
+- **Frontend tickets:** specify screens/components, user states, validation behavior, API interactions, and error/empty/loading flows.
+- **Infrastructure tickets:** specify topology, component responsibilities, configuration concerns, security, deployment/migration approach, and operational checks.
+- **All tickets:** explain recommended design choices, why they fit the confirmed requirements, relevant tradeoffs, implementation phases at a high level, and how acceptance criteria will be validated.
 
-**Required specificity when relevant:**
-- **Database:** propose named tables with purpose, columns/types/nullability/defaults, PK/FK/unique/check constraints, indexes (including partial indexes), relations and cardinality, enum/reference representation, migration names/order, seed data, transaction boundaries, and representative SQL DDL. Include a Mermaid `erDiagram` for nontrivial schema changes. Show concrete positive and negative SQL checks.
-- **Backend:** identify precise repo/module/package/file paths based on inspected code; proposed controllers, endpoints/methods, request/response shapes, services, repositories, DTOs, validation, authorization, state transitions, error handling and transaction boundaries. Include focused code/pseudocode for complex logic when useful.
-- **Frontend:** name real or proposed feature routes, components, services, models, API calls, data/UX states, form validation and error handling.
-- **Infrastructure/integrations:** specify config keys, environment dependencies, execution commands, failure/retry behavior and observable verification.
-- **All tickets:** include a file-by-file change list, ordered build steps with tangible deliverables, and explicit acceptance-criteria-to-test mapping where available.
+**Do not generate implementation code** in the plan: no SQL DDL/DML, Java/TypeScript snippets, shell commands, executable test scripts, method bodies, or line-by-line pseudocode. Avoid test-class names and exact migration filenames unless an existing convention makes them materially useful. A small conceptual field/type table, API contract summary, or component responsibility table is welcome; it is design documentation, not code.
 
-**Concrete proposal vs confirmed fact:** Distinguish `Existing (verified)`, `Proposed (not yet approved)`, and `Blocked/TBD`. A well-identified proposed table/API/file is allowed and expected as a recommendation, even when it is not currently in the code or KB. Never represent it as already confirmed or implemented. Do not assert that a product choice has been approved. Ground choices in requirements and architecture, explain concise tradeoffs, and flag assumptions.
+**Distinguish evidence and proposals:** label `Existing (verified)`, `Proposed design (requires review)`, and `TBD / blocked`. Propose reasonable technical defaults with rationale without pretending they are confirmed. Never invent or silently approve business rules, security decisions, or product behavior.
 
-**Decision discipline:** Make reversible technical recommendations where requirements permit; do not put every technology/data-type choice into Open Decisions. Reserve Open Decisions for truly product-defining, security-sensitive, or materially blocking unknowns. For each blocker give 2–3 feasible choices, a recommended default if justified, and the exact plan portion contingent on the decision. If a blocker prevents finalizing one part, still give a detailed conditional implementation for the rest. Never invent a confirmed business rule.
+**Decisions:** Reserve Open Decisions for material unknowns. For each give feasible options, a recommendation if defensible, and which part of the design it changes. Do not replace a solution with a checklist of things to decide.
 
-**Avoid generic wording:** Prohibited as standalone plan steps: "define schema", "decide representation", "implement migrations", "add validation", "update documentation", or "test constraints" without specifying the actual artifacts, structures, rules, and checks. Merely restating the Jira ticket in more words is not a solution. Do not fill diagrams with project-management actions (inspect, approve, document); diagram the proposed **runtime/data behavior or database relationships** instead.
+**Diagrams:** diagrams must represent the proposed system, entity relationships, runtime processing, or component interactions. Do not diagram the project-management workflow of inspecting, approving, coding, and documenting.
 
-**No ungrounded precision:** If source code, live database, or ticket details cannot be accessed, clearly identify what is unverified, avoid falsely claiming inspection, and give an explicitly provisional proposal using available evidence rather than substituting a long generic checklist. Do not claim a plan is implementation-ready if critical inputs are missing.
+**Quality bar:** a generic sequence such as "define schema → implement migration → test" is insufficient; a code-heavy specification with SQL and test commands is also incorrect. The deliverable is a **specific architecture/design proposal**, with enough detail to discuss correctness and tradeoffs before writing code.
 
 ## Context gathering
 
@@ -117,17 +117,17 @@ When useful, mention relevant modules, packages, components, or files discovered
 
 ### 3. Proposed Technical Solution
 
-Present the recommended target design **before** the execution steps. Specify actual proposed structures and interfaces: a schema/table-and-column specification, API contract, component/service interaction, or configuration design, whichever applies. Where relevant include concise SQL, JSON, or pseudocode snippets (not a full code implementation). Label new or unverified details as proposals and identify which existing paths were verified.
+Present the recommended design before the execution steps. Describe the proposed entities and their important fields, relationships, constraints, lifecycle rules, APIs/component boundaries, security, and tradeoffs as appropriate to the ticket. Use concise design tables or prose rather than executable code. Clearly label proposals versus verified existing behavior.
 
-For database tasks, include an **Entity Relationship Diagram** in Mermaid `erDiagram` when more than one related table is involved, plus concrete constraint/index/relationship specifications and representative SQL DDL. For other tasks, choose technical artifacts appropriate to the domain. Avoid diagramming a process of gathering approvals as the technical solution.
+For database tasks, include a Mermaid `erDiagram` when multiple related tables are involved, along with conceptual field/type, constraint, index, and relationship descriptions. Do not include SQL DDL or database scripts.
 
-### 4. File-by-file Changes
+### 4. Component / Artifact Impact
 
-List each confirmed existing or proposed new file/path, what changes in it, and its responsibility. Prioritize file-level guidance a developer can follow. Explicitly distinguish **existing (verified)** from **new (proposed)** paths.
+Identify affected repositories, modules, components, data models, or migration/documentation artifacts and their design responsibilities. Include existing paths only when verified and useful; do not produce an exhaustive file-by-file coding checklist or invent filenames.
 
-### 5. Implementation Steps
+### 5. High-level Implementation Approach
 
-Provide an ordered implementation sequence tied to the proposed design and files above.
+Describe a short, ordered set of technical phases and dependencies tied to the proposed solution. Focus on architectural sequencing and deliverables, not coding instructions, scripts, or method-level tasks.
 
 Rules:
 - Steps must be concrete enough for a developer to execute.
@@ -178,7 +178,7 @@ Include relevant tests, integration checks, migration checks, or manual validati
 
 Do not invent acceptance criteria that are not present in the ticket or confirmed project knowledge.
 
-For each applicable acceptance criterion, provide a specific test case with setup/input, expected outcome, and an executable test command or sample SQL/assertion where possible. Include negative/boundary cases for constraints and security behavior; specify what failure should occur.
+For each applicable acceptance criterion, explain the validation scenario and expected behavior, including negative and boundary cases where relevant. Do not provide executable SQL, commands, test scripts, or test-class implementations.
 
 ### 9. Dependencies
 
@@ -234,73 +234,21 @@ If the plan changes materially after the user approves it but before it is poste
 
 ## Draft output format
 
-Present the proposed implementation solution in the following shape (omit conditional sections if they provide no value):
+Present the solution design using this structure (omit conditional sections when irrelevant):
 
-````markdown
-## Implementation Plan — <Jira Issue Key>: <Ticket Title>
+1. **Goal** — intended outcome and scope.
+2. **Evidence & Assumptions** — verified current state, proposed design choices, material TBDs.
+3. **Affected Areas** — affected systems or modules.
+4. **Proposed Technical Solution** — concrete architecture, domain entities/important fields, relationships, constraints, APIs and component responsibilities as relevant; rationale and tradeoffs. Include Mermaid ERD for meaningful relational schemas.
+5. **Component / Artifact Impact** — what areas or artifacts would change and why, without a file-by-file coding checklist.
+6. **High-level Implementation Approach** — phases and ordering, not code-level steps.
+7. **Flowchart** — Mermaid diagram of meaningful runtime logic, if applicable.
+8. **Sequence Diagram** — Mermaid diagram of meaningful component interactions, if applicable.
+9. **Validation** — acceptance criteria mapped to observable scenarios and expected outcomes, without scripts.
+10. **Dependencies** — only actual dependencies.
+11. **Open Decisions** — material blockers, options, recommendation, impact.
 
-### Goal
-<Concrete outcome>
-
-### Evidence & Assumptions
-- Existing (verified): <repo/path and finding>
-- Proposed: <new design choice, with short rationale>
-- Unverified/TBD: <only material gaps>
-
-### Affected Areas
-- <Relevant area>
-
-### Proposed Technical Solution
-<Specific table/column/constraint/index designs, API contracts, service/component logic, configuration, or other implementation-level solution>
-
-```sql
--- Representative, grounded proposed DDL or verification query when relevant
-```
-
-```mermaid
-erDiagram
-    ENTITY_A ||--o{ ENTITY_B : relates_to
-```
-
-### File-by-file Changes
-| Path | Existing / New | Concrete change |
-| --- | --- | --- |
-| <repo/path> | <Verified existing / Proposed new> | <Specific artifact and responsibility> |
-
-### Implementation Steps
-1. <Exact build step tied to files/design>
-2. <Exact build step tied to files/design>
-
-### Flowchart
-```mermaid
-flowchart TD
-    A[Runtime request] --> B{Valid?}
-    B -->|Yes| C[Persist change]
-    B -->|No| D[Return error]
-```
-
-### Sequence Diagram
-```mermaid
-sequenceDiagram
-    participant A as Client
-    participant B as Service
-    A->>B: Proposed request
-    B-->>A: Proposed response
-```
-
-### Validation
-- <Acceptance criterion> → <test input/command/SQL> → <expected output or failure>
-
-### Dependencies
-- <Actual dependency only>
-
-### Open Decisions
-- <Blocking choice, feasible options, recommended default and impact>
-````
-
-All SQL/ERD/flow/sequence fragments above are syntax-only examples, not facts about Tutor Marketplace. Replace every placeholder with the actual ticket-grounded design; omit irrelevant snippets/sections. Do not output generic template nodes or headings without technical content.
-
-Diagrams are conditional: use an ERD for meaningful relational schema design, a flowchart for runtime/control flow, and a sequence diagram for meaningful component interactions. The Jira comment must preserve the complete approved plan (including diagrams), without the approval conversation or internal research notes.
+The Jira comment should contain the complete approved solution, including any relevant diagrams, but not the approval conversation or internal research notes.
 
 ## Approval rule
 
@@ -318,9 +266,9 @@ Before presenting the plan, verify:
 - Relevant project context has been checked.
 - The plan follows confirmed architecture and project conventions.
 - Planned/TBD knowledge has not been presented as current confirmed state.
-- Proposed technical structures, types/contracts/constraints, files, and key algorithms are specified concretely enough to implement; no generic research-only plan passes.
-- File-by-file changes identify existing verified vs newly proposed paths.
-- For meaningful DB schema work, an ER diagram and specific schema/DDL examples are included.
+- Proposed entities, relationships, constraints, contracts and component responsibilities are concrete enough for design review, without implementation code.
+- Impacted components and artifacts are identified without an exhaustive file-by-file coding checklist.
+- For meaningful DB schema work, an ER diagram and conceptual schema specification are included.
 - Diagrams describe the solution/runtime rather than a project-management approval workflow.
 - No unsupported business rule, schema, API contract, or dependency has been invented.
 - Validation maps back to the ticket's requirements and acceptance criteria.

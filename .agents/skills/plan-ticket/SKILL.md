@@ -103,7 +103,39 @@ Rules:
 - Identify cross-repository or cross-layer sequencing when relevant.
 - Do not add unrelated refactoring or improvements.
 
-### 4. Validation
+### 4. Flowchart
+
+When the ticket has meaningful processing logic, decision branches, or multi-step behavior, include a Mermaid `flowchart` to explain the proposed execution flow.
+
+Rules:
+- Represent the business/process flow at a useful level of abstraction, not every method call.
+- Label branches and failure paths when they matter to the acceptance criteria.
+- Base nodes and transitions on confirmed requirements and inspected context.
+- Do not invent business rules, APIs, tables, or implementation details.
+- Mark unresolved behavior as `TBD` and describe the corresponding question under **Open Decisions**.
+- Omit this section if the ticket does not benefit from a flowchart.
+
+### 5. Sequence Diagram
+
+When the ticket involves meaningful interactions across actors, components, services, repositories, or the database, include a Mermaid `sequenceDiagram` showing the order of those interactions.
+
+Rules:
+- Use participants grounded in the project architecture or code actually inspected.
+- Show key requests, responses, and important alternative/error paths when supported.
+- Do not imply a new API contract, endpoint, service boundary, or database operation is approved when it is not.
+- Use conceptual labels rather than invented concrete interfaces where necessary.
+- Mark unresolved interactions as `TBD` and include the related decision under **Open Decisions**.
+- Omit this section when there is no meaningful interaction sequence (for example, a simple documentation change).
+
+### Diagram standards
+
+- Use fenced Mermaid code blocks (```mermaid) for both diagrams.
+- Keep diagrams concise, legible, and consistent with **Plan** and **Validation**.
+- Do not include generic placeholder diagrams merely to fill a section.
+- The Jira comment must preserve the Mermaid source in fenced code blocks. Do not assume the Jira instance renders Mermaid natively; users should still be able to copy the source to a Mermaid-compatible viewer.
+- If the Jira comment format cannot preserve Mermaid code fences, preserve the source as clearly labelled preformatted/code text instead; do not silently discard diagrams.
+
+### 6. Validation
 
 Describe how the implementation should be verified against the ticket's acceptance criteria.
 
@@ -111,13 +143,13 @@ Include relevant tests, integration checks, migration checks, or manual validati
 
 Do not invent acceptance criteria that are not present in the ticket or confirmed project knowledge.
 
-### 5. Dependencies
+### 7. Dependencies
 
 Include this section only when the ticket depends on other tickets, decisions, systems, migrations, or project work.
 
 Do not invent dependencies merely to populate the section.
 
-### 6. Open Decisions
+### 8. Open Decisions
 
 Include this section only when unresolved decisions materially affect implementation.
 
@@ -163,9 +195,9 @@ If the plan changes materially after the user approves it but before it is poste
 
 ## Draft output format
 
-Present the plan to the user in this shape:
+Present the plan to the user in this shape (omit conditional sections when they are not useful):
 
-```markdown
+````markdown
 ## Implementation Plan — <Jira Issue Key>: <Ticket Title>
 
 ### Goal
@@ -173,15 +205,29 @@ Present the plan to the user in this shape:
 
 ### Affected Areas
 - <Area>
-- <Area>
 
 ### Plan
 1. <Implementation step>
 2. <Implementation step>
-3. <Implementation step>
+
+### Flowchart
+```mermaid
+flowchart TD
+    A[Start] --> B{Decision?}
+    B -->|Yes| C[Outcome A]
+    B -->|No| D[Outcome B]
+```
+
+### Sequence Diagram
+```mermaid
+sequenceDiagram
+    participant A as Component A
+    participant B as Component B
+    A->>B: Request
+    B-->>A: Response
+```
 
 ### Validation
-- <Verification step>
 - <Verification step>
 
 ### Dependencies
@@ -189,11 +235,11 @@ Present the plan to the user in this shape:
 
 ### Open Decisions
 - <Unresolved decision/question?>
-```
+````
 
-`Dependencies` and `Open Decisions` are conditional sections and must be omitted when they add no useful information.
+Both diagram snippets above are syntax examples only. Do not copy their invented nodes or participants into an actual ticket plan. Use only ticket-grounded content.
 
-The Jira comment should contain the implementation plan itself, without the approval conversation or internal research notes.
+The **Flowchart** and **Sequence Diagram** sections are conditional, as are **Dependencies** and **Open Decisions**. The Jira comment should contain the complete approved plan including any relevant Mermaid diagrams, but never include the approval conversation or internal research notes.
 
 ## Approval rule
 
@@ -214,6 +260,7 @@ Before presenting the plan, verify:
 - Technical steps are concrete but do not contain unnecessary implementation detail.
 - No unsupported business rule, schema, API contract, or dependency has been invented.
 - Validation maps back to the ticket's requirements and acceptance criteria.
+- Any Mermaid Flowchart or Sequence Diagram is useful, syntactically coherent, consistent with the implementation steps, and free of invented requirements.
 - Open decisions are visible instead of silently resolved.
 - No write action has occurred during planning.
 - The user will see the complete plan before being asked to approve the Jira comment.

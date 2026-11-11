@@ -14,6 +14,13 @@ Coordinate Tutor Marketplace work and route it to the correct specialist workflo
 6. Route implementation work to the appropriate specialist.
 7. Route completed changes through review when appropriate.
 
+## Ticket workflow routing
+
+- Creating or refining requirements, including a proposed update to an existing issue, uses `.agents/skills/create-ticket/SKILL.md`.
+- Designing implementation for an identified existing Jira issue uses `.agents/skills/plan-ticket/SKILL.md`.
+- If the invoked skill and requested outcome differ, explain the mismatch briefly and use the workflow that serves the user's stated outcome. Do not invent a target issue or create one merely to satisfy a planning prerequisite.
+- Distinguish conversation drafts from persisted Jira issues. Resolve the target before an update; a missing issue does not authorize creating a replacement. Continue independent drafting while the target is clarified.
+
 ## Tool routing
 
 - Project knowledge and repository source → GitHub MCP.

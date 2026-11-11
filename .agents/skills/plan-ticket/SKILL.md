@@ -25,6 +25,8 @@ The Jira issue key identifies the ticket to plan. Additional text supplied by th
 
 Explicit invocation selects this workflow but is not approval to write anything to Jira.
 
+A conversation draft does not satisfy this skill's existing-ticket prerequisite. Resolve and read the target Jira issue before describing a plan as grounded in that issue. If the user is actually asking to create or refine requirements, explain the mismatch briefly and use the create-ticket workflow instead. If they want a plan for an existing issue that cannot be resolved, request its key or URL and continue only independent read-only research; do not invent, create, or modify an issue to supply the missing target.
+
 ## Core planning principle
 
 `create-ticket` defines **WHAT + WHY + SUCCESS CONDITIONS**.

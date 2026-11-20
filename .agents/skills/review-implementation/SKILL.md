@@ -43,8 +43,12 @@ If a required source cannot be accessed, name the gap and avoid an unsupported a
 2. Inspect each affected layer for behavior, API and database contracts, authentication/authorization boundaries, failures, state transitions, concurrency, compatibility, and unintended scope expansion where applicable.
 3. Compare **every** Jira acceptance criterion with the code and verification evidence; distinguish implemented behavior from successfully tested behavior.
 4. Check tests: meaningful coverage of changed behavior, negative/boundary cases, regressions, migrations, and CI/local results when accessible. Consult `tutor_kb/standards/testing.md` and verify current CI configuration. If changed executable Java coverage is required above 85%, report actual measured status; never infer it from the presence of JaCoCo.
-5. Identify concrete findings; for each provide severity, issue, exact evidence (path and lines or diff hunk when possible), impact, and smallest recommended fix.
-6. Rank findings: `Critical` (serious security/data loss/core failure), `Major` (required behavior incorrect/missing or material regression), `Minor` (limited defect or maintainability issue with real impact). Do not call speculative style preferences defects.
+5. Identify concrete findings; for each provide importance, issue, exact evidence (path and lines or diff hunk when possible), impact, and smallest recommended fix.
+6. Rate every finding by importance using exactly three levels, ordered `High`, `Medium`, `Low`:
+   - `High`: serious security exposure, data loss/corruption, failure of a core or required flow, or a material regression in existing features with no reasonable workaround.
+   - `Medium`: a functional defect, partial requirement failure, or regression with limited scope or a reasonable workaround; also a code-quality defect with a demonstrated maintenance or reliability cost.
+   - `Low`: a narrowly scoped, non-critical defect or maintainability issue with small impact; it may be a nonblocking follow-up.
+   Explain the rating using observed impact, affected users/features, conditions or likelihood, and available workarounds where supported. Do not call speculative style preferences defects or treat missing evidence alone as a proven high-importance bug.
 7. State documentation inconsistencies, missing tests, inaccessible verification, or unresolved requirements separately as appropriate. Avoid duplicate findings for the same root cause.
 8. Produce the review report and verdict. Return actionable fixes to `implement-ticket` for another approved implementation pass.
 
@@ -71,7 +75,8 @@ Use a table: `Criterion | Result | Evidence`.
 - `Not Implemented`: criterion absent from the reviewed implementation.
 
 ### 3. Findings
-Group in severity order (`Critical`, `Major`, `Minor`) when findings exist. Each finding:
+Group in importance order (`High`, `Medium`, `Low`) when findings exist. Each finding:
+- **Importance:** exactly one of `Low`, `Medium`, `High`, with a brief justification based on impact and scope.
 - **Issue:** precise defect or mismatch, not a generic warning.
 - **Evidence:** file and line/diff hunk, behavior, or failed check.
 - **Impact:** affected requirement, user or system behavior.
@@ -87,7 +92,7 @@ Choose exactly one:
 - **Changes Requested** — one or more actionable defects or acceptance-criteria failures require changes.
 - **Blocked / Unable to Verify** — essential code, requirement, plan decision, or verification evidence is missing, making an honest approval impossible.
 
-A `Minor` finding need not block approval if it has no material correctness impact; explicitly state any nonblocking follow-up. Do not mark Jira Done or merge as a side effect.
+A `Low` finding need not block approval if it has no material correctness impact; explicitly state any nonblocking follow-up. Do not mark Jira Done or merge as a side effect.
 
 ## Review report template
 
@@ -103,7 +108,8 @@ A `Minor` finding need not block approval if it has no material correctness impa
 | AC-1: <requirement> | Pass / Fail / Unverified / Not Implemented | <source, check, or limitation> |
 
 ### 3. Findings
-#### Major — <Short title>
+#### Medium — <Short title>
+- **Importance:** Medium — <reason based on impact and scope>
 - **Issue:** <specific problem>
 - **Evidence:** <path:line or diff; observable fact>
 - **Impact:** <consequence>
@@ -125,6 +131,6 @@ Omit the example finding when none exists. In the verdict, use the exact combine
 - Every acceptance criterion is mapped, including gaps.
 - Security, integrity, failure handling, backward compatibility and scope were assessed when relevant.
 - Test evidence is accurately attributed; no test or threshold is claimed without measurement.
-- Findings are specific, prioritized, deduplicated, and actionable.
+- Findings are specific, deduplicated, actionable, and ordered High, Medium, Low; each importance rating has an evidence-based justification.
 - Conflicting KB/Jira/source claims and unknowns are disclosed.
 - Review was read-only; no approval was silently turned into a repository/Jira action.
